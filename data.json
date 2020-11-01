@@ -1,0 +1,30 @@
+{
+  "z": [
+    {
+      "id": 1,
+      "isCheck": false,
+      "text": "Дороу",
+      "isDone": false,
+      "isEdit": false,
+      "order": 1
+    },
+    {
+      "id": 4,
+      "isCheck": true,
+      "text": "выучил",
+      "isDone": true,
+      "isEdit": false,
+      "order": 2
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
