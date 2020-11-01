@@ -9,13 +9,14 @@
       "order": 1
     },
     {
-      "id": 4,
-      "isCheck": true,
-      "text": "выучил",
-      "isDone": true,
+      "id": 2,
+      "isCheck": false,
+      "text": "Привет",
+      "isDone": false,
       "isEdit": false,
       "order": 2
     }
+
   ],
   "comments": [
     {

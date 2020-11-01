@@ -5,6 +5,7 @@ const DELETE_TODO = 'DELETE_TODO';
 const EDIT_TODO = 'EDIT_TODO';
 const SET_CURT_LIST = 'SET_CURT_LIST';
 const SET_TODO_ITEM = 'SET_TODO_ITEM';
+const LODASH_FLATTEN = 'LODASH_FLATTEN';
 
 let order = 1;
 
@@ -81,6 +82,13 @@ const ToDoReducer = (state = initialState, action) => {
                 ...state,
                 z: action.item
             };
+/*
+        case LODASH_FLATTEN:
+            return {
+                ...state,
+                z: state._.flatten(z)
+            }
+*/
 
 /*
         case SET_CURT_LIST:
@@ -127,36 +135,101 @@ export const SetTODOThunk = () => {
         }
     }
 };
+export const DeleteAll = (text) => {
+    return async (dispatch) => {
+                for (let i = 1; i<= text.length; i++  ) {
+                    let response = await axios.delete(`http://localhost:3000/z/${i}`, ).then(response => {
+                        return response
+                    });
+                    if (response.status >= 200 && response.status < 300) {
+                        dispatch(SetTODOThunk());
+                    } else {
+                        alert('ошибка', response.status)
+                    }
+                }
+    }
+};
+
+
+
 
 export const PostToDOThunk = (text) => {
     return async  (dispatch) => {
+
+
 /*
-        for (let i = 0;  )
+        for (let i = 1; i <= text.length; i++) {
+            let response = await axios.put(`http://localhost:3000/z/${i}`, text[i - 1]).then(response => {
+                console.log('text', text[i]);
+                return response
+            });
+            if (response.status >= 200 && response.status < 300) {
+                dispatch(SetTODOThunk());
+            } else {
+                alert('ошибка', response.status)
+            }
+        } // Работает только на изменения, добавление, удаление нет
 */
-        let response = await axios.delete('http://localhost:3000/z/2', ).then(response => {
-            return response
-        })
-        if (response.status >= 200 && response.status < 300) {
-            dispatch(SetTODOThunk());
-            alert('успех')
-        } else {
-            alert('ошибка')
-        }
-    }
-/*
-        let response = await axios.post('http://localhost:3000/z', {z:text} ).then(response => {
-            return response
-        });
-        if (response.status >= 200 && response.status < 300) {
-            dispatch(SetTODOThunk());
-            alert('успех')
-        } else {
-            alert('ошибка')
-        }
-    }*/
+                let response = await axios.post(`http://localhost:3000/z`, text ).then(response => {
+                    console.log('text', text);
+                    return response
+                });
+                if (response.status >= 200 && response.status < 300) {
+                    alert('Ура!!!' )
+        /*
+                    dispatch(SetTODOThunk());
+        */
+                } else {
+                    alert('ошибка', response.status)
+                }
+            }
+
+
+        /*
+                for (let i = 1; i<= text.length; i++  ) {
+                    let response = await axios.put(`http://localhost:3000/z/${i}`, {text} ).then(response => {
+                        return response
+                    });
+                    if (response.status >= 200 && response.status < 300) {
+                        dispatch(SetTODOThunk());
+                        alert('успех')
+                    } else {
+                        alert('ошибка')
+                    }
+                }
+        */
+        /*
+                let response = await axios.post('http://localhost:3000/z', {z:text} ).then(response => {
+                    return response
+                });
+                if (response.status >= 200 && response.status < 300) {
+                    dispatch(SetTODOThunk());
+                    alert('успех')
+                } else {
+                    alert('ошибка')
+                }
+            }*/
 };
 
 
 
 
 export default ToDoReducer;
+
+/*
+{
+    "id": 1,
+    "isCheck": false,
+    "text": "Дороу",
+    "isDone": false,
+    "isEdit": false,
+    "order": 1
+},
+{
+    "id": 2,
+    "isCheck": false,
+    "text": "Привет",
+    "isDone": false,
+    "isEdit": false,
+    "order": 2
+}*/

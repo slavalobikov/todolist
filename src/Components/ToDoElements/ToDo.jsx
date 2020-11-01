@@ -27,8 +27,7 @@ const ToDo = ({text, isDone, ...props}) => {
             return -1;
         }
     };
-
-    const dragStartHandler = (e, todo) => {
+/*    const dragStartHandler = (e, todo) => {
         setCurrentCard(todo)
 
     };
@@ -46,17 +45,20 @@ const ToDo = ({text, isDone, ...props}) => {
         e.target.style.background = '#fafafa';
         setCurrentCard(null)
     };
+    onDragStart={(e) => {dragStartHandler(e, td)}}
+    onDragLeave={(e) => {dragEndHandler(e)}}
+    onDragOver={(e) => {dragOverHandler(e)}}
+    onDragEnd={(e) => {dragEndHandler(e)}}
+    onDrop={(e) => {dropHandler(e, td)}}
+    draggable={true}
+    */
 
-    let ToDoElements = text.sort(sortCards).map(td => (
+    let ToDoElements = text.map(td => (
 
         <div
             key={td.id}>
-            <div onDragStart={(e) => {dragStartHandler(e, td)}}
-                 onDragLeave={(e) => {dragEndHandler(e)}}
-                 onDragOver={(e) => {dragOverHandler(e)}}
-                 onDragEnd={(e) => {dragEndHandler(e)}}
-                 onDrop={(e) => {dropHandler(e, td)}}
-                 draggable={true}
+            <div
+
                 className={s.item}>
                 {td.isDone
                     ? <button onClick={() => {props.TooggleIsDoneTrue(td.id, td.isDone)}} className={s.radioTrue} ></button>
@@ -80,6 +82,7 @@ const ToDo = ({text, isDone, ...props}) => {
 
         {ToDoElements}
         <button onClick={() => props.PostToDOThunk(text)}>сортировать</button>
+        <button onClick={() => props.DeleteAll(text)}> >Удалить все(МЕНТЫ)</button>
     </div>
 };
 

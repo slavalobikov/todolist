@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from "react-redux";
 import {compose} from "redux";
 import {
-    AddZ,
+    AddZ, DeleteAll,
     DeleteToDO,
     EditToDO,
     PostToDOThunk,
@@ -51,5 +51,6 @@ export default compose(
         SetCurrentList,
         SetTODOThunk,
         PostToDOThunk,
+        DeleteAll,
     }),
 )(ToDoContainer)
