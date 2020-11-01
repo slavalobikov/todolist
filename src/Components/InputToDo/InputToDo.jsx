@@ -5,12 +5,10 @@ const InputToDo = (props) => {
 
 
     const [value, setValue] = useState('');
-    console.log('privet')
-
     let IdNewMessage;
 
     if (!props.text[0]) {
-          IdNewMessage = 0;
+          IdNewMessage = 1;
     } else {
           IdNewMessage = props.text.length+ 1;
     }

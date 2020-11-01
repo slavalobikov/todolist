@@ -1,22 +1,13 @@
 {
   "z": [
     {
-      "id": 1,
+      "id": 3,
       "isCheck": false,
-      "text": "Дороу",
+      "text": "qqq",
       "isDone": false,
       "isEdit": false,
       "order": 1
-    },
-    {
-      "id": 2,
-      "isCheck": false,
-      "text": "Привет",
-      "isDone": false,
-      "isEdit": false,
-      "order": 2
     }
-
   ],
   "comments": [
     {

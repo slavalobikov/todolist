@@ -5,7 +5,6 @@ import {DeleteOutlined, FormOutlined} from '@ant-design/icons';
 
 
 const ToDo = ({text, isDone, ...props}) => {
-    console.log('text', text)
     const [isEditValue, setIsEdit] = useState('');
     const [currentCard ,setCurrentCard] = useState(null);
 
@@ -83,6 +82,7 @@ const ToDo = ({text, isDone, ...props}) => {
         {ToDoElements}
         <button onClick={() => props.PostToDOThunk(text)}>сортировать</button>
         <button onClick={() => props.DeleteAll(text)}> >Удалить все(МЕНТЫ)</button>
+        <button onClick={() => props.UpdateWithoutNew(text)}>Обновить текст во всех</button>
     </div>
 };
 

@@ -8,7 +8,7 @@ import {
     PostToDOThunk,
     SetCurrentList,
     SetTODOThunk,
-    TooggleIsDoneTrue
+    TooggleIsDoneTrue, UpdateWithoutNew
 } from "./redux/ToDoReducer";
 import ToDo from "./Components/ToDoElements/ToDo";
 
@@ -52,5 +52,6 @@ export default compose(
         SetTODOThunk,
         PostToDOThunk,
         DeleteAll,
+        UpdateWithoutNew,
     }),
 )(ToDoContainer)
