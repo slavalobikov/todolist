@@ -7,6 +7,9 @@ const EDIT_TODO = 'EDIT_TODO';
 const SET_CURT_LIST = 'SET_CURT_LIST';
 const SET_TODO_ITEM = 'SET_TODO_ITEM';
 const LODASH_FLATTEN = 'LODASH_FLATTEN';
+const SET_RESPONSE = 'SET_RESPONSE';
+const DELETE_RESPONSE = 'DELETE_RESPONSE';
+const IS_FETCHING = 'IS_FETCHING';
 
 let order = 1;
 
@@ -29,7 +32,9 @@ let initialState = {
                 isEdit:false,
                 order: order++,
             }*/
-        ]
+        ],
+        response: [],
+        isFetching: null,
 };
 
 const ToDoReducer = (state = initialState, action) => {
@@ -86,14 +91,26 @@ const ToDoReducer = (state = initialState, action) => {
         case LODASH_FLATTEN:
             let dima = _.flatten(state.z);
             let leha = _.flatten(dima)
-            console.log('dima', dima);
             return {
                 ...state,
                 z:leha
-/*
-                z: state._.flatten(...state.z)._.flatten(...state.z)
-*/
+            };
+        case SET_RESPONSE:
+            return {
+                ...state,
+                response: action.response
+            };
+        case DELETE_RESPONSE:
+            return {
+                ...state,
+                response: []
+            };
+        case IS_FETCHING:
+            return {
+                ...state,
+                isFetching: action.isFetching
             }
+
 
 /*
         case SET_CURT_LIST:
@@ -128,6 +145,9 @@ export const DeleteToDO = (id, ) => ({type: DELETE_TODO, id});
 export const EditToDO = (id, text, edit) => ({type: EDIT_TODO, id, text, edit});
 export const SetCurrentList = (id, currentCart) => ({type: SET_CURT_LIST, id,currentCart});
 export const SetToDoItem = (item) => ({type: SET_TODO_ITEM, item});
+export const SetResponse = (response) => ({type: SET_RESPONSE, response});
+export const DeleteResponse = () => ({type: DELETE_RESPONSE, });
+export const IsFething = (isFetching) => ({type: IS_FETCHING, isFetching });
 export const LodashFlatten = () => ({type: LODASH_FLATTEN, });
 
 export const SetTODOThunk = () => {
@@ -136,24 +156,47 @@ export const SetTODOThunk = () => {
                 return response
         });
         if (response.status === 200) {
-            dispatch(SetToDoItem(response.data))
-
-
+            dispatch(SetToDoItem(response.data));
         }
     }
 };
+
+export const SetResponseThunk = () => {
+    return async (dispatch) => {
+        dispatch(IsFething(true));
+        let response = await axios.get('http://localhost:3000/z').then(response => {
+            return response
+        });
+        if (response.status === 200) {
+            dispatch(SetResponse(response.data))
+        }
+        dispatch(IsFething(false))
+
+    }
+}
 export const DeleteAll = (text) => {
     return async (dispatch) => {
-                for (let i = 1; i<= text.length; i++  ) {
+                let responseOne = await axios.get('http://localhost:3000/z').then(response => {
+                    return response.data
+                });
+                for (let i = text[0].id; i< text[0].id + text.length; i++  ) {
+                    if (!responseOne[i - 1] && !!text[i - 1]){
+                        return dispatch(SetTODOThunk())
+                    }
+                    dispatch(IsFething(true));
                     let response = await axios.delete(`http://localhost:3000/z/${i}`, ).then(response => {
                         return response
                     });
                     if (response.status >= 200 && response.status < 300) {
+                        console.log('Удаление прошло успешно' , [i]);
                         dispatch(SetTODOThunk());
-                    } else {
-                        alert('ошибка', response.status)
+                        dispatch(IsFething(false))
                     }
                 }
+        dispatch(SetTODOThunk());
+        dispatch(IsFething(false));
+        dispatch(DeleteResponse);
+
     }
 };
 
@@ -175,101 +218,68 @@ export const UpdateWithoutNew = (text) => {
 }
 export const PostToDOThunk = (text) => {
     return async  (dispatch) => {
-        console.log('text', text);
+        dispatch(IsFething(true));
         let responseOne = await axios.get('http://localhost:3000/z').then(response => {
             return response.data
         });
-        console.log('responseOne', responseOne)
+        console.log('responseOne', responseOne);
         if (!!responseOne[0]) {
-            for (let i = 1; i <= responseOne.length; i++) {
-                let responseTwo = await axios.delete(`http://localhost:3000/z/${i}`,).then(response => {
-                    return response
-                });
-                console.log('responseIfMasNetu', responseTwo.data)
+            for (let i = responseOne[0].id; i <= responseOne[0].id + responseOne[responseOne.length - 1].id; i++) {
+                if (!responseOne[i - 1]) {
+                    return
+                } else {
+                    let responseTwo = await axios.delete(`http://localhost:3000/z/${responseOne[i -1].id}`,).then(response => {
+                        return console.log('Удаление с сервера успешно проведено', responseOne[i - 1].id)
+                    });
+                    dispatch(IsFething(false));
+
+                }
             }
         }
-            console.log('text2', text);
-        for (let i = 0; i <  text.length; i++) {
-            let responseThree = await axios.post(`http://localhost:3000/z`, text[i]).then(response => {
-                return response
-            });
-            console.log('responseThree', responseThree.data)
-        }
+        for (let i = text[0].id; i <=  text[text.length -1].id; i++) {
 
+            console.log('responseOne[i]', responseOne[i]);
+            console.log('text[i]', text[i - 1]);
+            let responseThree = await axios.post(`http://localhost:3000/z`, text[i - 1]).then(response => {
+                return response})
+            ;}
+        dispatch(IsFething(false));
 
+    }
 
+/*    if (!text[0]) {
+            alert('hello')
 
-            /*            if (response.status >= 200 && response.status < 300) {
-                            console.log('responseOne', response)
-                        } else {
-                            alert('ошибка', response.status)
-                        }*/
-        }
-
-        /*let response = await axios.post(`http://localhost:3000/z`, text ).then(response => {
-                    return response
-                });
-                console.log('responseTwo', response)
-                if (response.status >= 200 && response.status < 300) {
-                    alert('Ура!!!' )
-/!*                    for (let i = 1; i <= text.length; i++) {
-                        let response = await axios.put(`http://localhost:3000/z/${i}`, _.flatten(text[i - 1])).then(response => {
-                            console.log('text', text[i]);
-                            return response
-                        });*!/
-/!*
-                    console.log('Do uda', text)
-                    for (let i = 1; i<= text.length; i++  ) {
-                        let response = await axios.delete(`http://localhost:3000/z/${i}`, )
-                    }
-                console.log('posle', text)
-                    dispatch(LodashFlatten());
-                    console.log('itog', text)
-*!/
-
-/!*                    console.log('izmenenia', text)
-                    for (let i = 1; i <= text.length; i++) {
-                        dispatch(UpdateWithoutNew(text))
-                        /!*                        let response = await axios.put(`http://localhost:3000/z/${i}`, text[i - 1]).then(response => {
-                            return response
-                        });
-                        if (response.status >= 200 && response.status < 300) {
-                            dispatch(SetTODOThunk());
-                        } else {
-                            alert('ошибка', response.status)
-                        }*!/
-                    }*!/
-                } else {
-                    alert('ошибка', response.status)
+/!*            for (let i = 1; i <= text[text.length].id; i++) {
+                if (!text[i]) {
+                    return
                 }
-            }*/
+                let responseThree = await axios.post(`http://localhost:3000/z`, text[i]).then(response => {
+                    return response})
+            }*!/
+        } else {
+            alert('dima')
+            console.log('text', text)
+            for (let i = text[0].id; i <=  text[text.length -1].id; i++) {
+
+                console.log('responseOne[i]', responseOne[i]);
+                console.log('text[i]', text[i - 1]);
+                let responseThree = await axios.post(`http://localhost:3000/z`, text[i - 1]).then(response => {
+                    return response})
+                ;}}
+
+    }*/
 
 
-        /*
-                for (let i = 1; i<= text.length; i++  ) {
-                    let response = await axios.put(`http://localhost:3000/z/${i}`, {text} ).then(response => {
-                        return response
-                    });
-                    if (response.status >= 200 && response.status < 300) {
-                        dispatch(SetTODOThunk());
-                        alert('успех')
-                    } else {
-                        alert('ошибка')
-                    }
-                }
-        */
-        /*
-                let response = await axios.post('http://localhost:3000/z', {z:text} ).then(response => {
-                    return response
-                });
-                if (response.status >= 200 && response.status < 300) {
-                    dispatch(SetTODOThunk());
-                    alert('успех')
-                } else {
-                    alert('ошибка')
-                }
-            }*/
 };
+
+export const FinalCopyThunk = (text) => {
+    return   (dispatch) => {
+        setTimeout (dispatch(PostToDOThunk(text)), 0);
+        setTimeout(dispatch(PostToDOThunk(text)), 3000)
+    }
+};
+
 
 
 

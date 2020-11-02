@@ -10,7 +10,7 @@ const InputToDo = (props) => {
     if (!props.text[0]) {
           IdNewMessage = 1;
     } else {
-          IdNewMessage = props.text.length+ 1;
+          IdNewMessage = props.text[props.text.length - 1].id + 1;
     }
 
     const addToDo = () => {
@@ -24,14 +24,19 @@ const InputToDo = (props) => {
     }
 
     return (
-        <div className={s.addField}>
-            <input type="text"
-                   value={value}
-                   onChange={(e) => {setValue(e.currentTarget.value)}}
-                   placeholder={'Введите свою задачу'}
+        <div>
+            {!props.isFetching
+                ? <div  className={s.addField}>
+                    <input type="text"
+                           value={value}
+                           onChange={(e) => {setValue(e.currentTarget.value)}}
+                           placeholder={'Введите свою задачу'}
 
-            />
-            <button onClick={addToDo} className={s.addBtn}>+</button>
+                    />
+                    <button onClick={addToDo} className={s.addBtn}>+</button>
+                </div>
+                : <div></div> }
+
         </div>
     );
 };

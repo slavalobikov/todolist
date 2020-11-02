@@ -1,12 +1,16 @@
 import React, {useState} from 'react';
-import s from './ToDo.module.css'
 import cn from 'classnames'
-import {DeleteOutlined, FormOutlined} from '@ant-design/icons';
+import {DeleteOutlined, FormOutlined, SaveOutlined} from '@ant-design/icons';
+
+import s from './ToDo.module.css'
+import preloaader from './../../assest/img/preloader.svg'
 
 
 const ToDo = ({text, isDone, ...props}) => {
     const [isEditValue, setIsEdit] = useState('');
     const [currentCard ,setCurrentCard] = useState(null);
+
+
 
     const editToDoMessage = (id, isEditValueF, isEditF, td) => {
                 if (!isEditValue && td === '' ) {
@@ -77,12 +81,37 @@ const ToDo = ({text, isDone, ...props}) => {
             </div>
         </div>
     ));
-    return <div>
 
-        {ToDoElements}
-        <button onClick={() => props.PostToDOThunk(text)}>сортировать</button>
-        <button onClick={() => props.DeleteAll(text)}> >Удалить все(МЕНТЫ)</button>
-        <button onClick={() => props.UpdateWithoutNew(text)}>Обновить текст во всех</button>
+    const [isSave, setIsSave] = useState(true);
+
+    const Save = (text) => {
+            props.PostToDOThunk(text);
+        setIsSave(!isSave);
+    };
+
+    const Izm = (text) => {
+        props.FinalCopyThunk(text)
+        setIsSave(!isSave);
+    };
+    console.log('response', props.response)
+    return <div >
+        {!!props.isFetching
+            ? <div className={s.PreloaderBlock}>
+                <img className={s.preloader} src={preloaader} alt="preloader"/>
+              </div>
+            : <div className={s.MainBlock}>
+            {ToDoElements}
+            {!!text[0] &&
+            <button onClick={() => Save(text)}>Загрузить данные</button>}
+            {!!text[0] &&
+            <div>
+                <button onClick={() => Izm(text)}>Изменить</button>
+            </div>}
+
+
+            {!!text[0] && <DeleteOutlined className={s.DeleteAll} onClick={() => props.DeleteAll(text)} />}
+            <SaveOutlined className={s.SaveAll} />
+        </div>}
     </div>
 };
 

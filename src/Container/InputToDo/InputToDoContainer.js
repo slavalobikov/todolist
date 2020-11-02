@@ -26,6 +26,7 @@ class InputToDoContainer extends React.Component {
 let mapStateToProps = (state) => {
     return {
         text: state.ToDoReducer.z,
+        isFetching: state.ToDoReducer.isFetching,
     }
 };
 

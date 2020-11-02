@@ -48,3 +48,33 @@
     text-decoration: line-through;
     opacity: 0.4;
 }
+
+.DeleteAll {
+    position: absolute;
+    right: 10px;
+    top:340px;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.MainBlock {
+    position: relative;
+}
+
+.SaveAll {
+    position: absolute;
+    top: 340px;
+    left:10px;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.PreloaderBlock {
+    position: relative;
+}
+
+.preloader {
+    position: absolute;
+    left: 260px;
+    top: 150px;
+}
