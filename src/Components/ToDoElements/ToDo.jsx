@@ -8,6 +8,7 @@ import preloaader from './../../assest/img/preloader.svg'
 
 
 const ToDo = ({text, isDone, ...props}) => {
+
     const [isEditValue, setIsEdit] = useState('');
 /*
     const [currentCard ,setCurrentCard] = useState(null);
@@ -56,9 +57,62 @@ const ToDo = ({text, isDone, ...props}) => {
     draggable={true}
     */
 
-    let ToDoElements = text.map(td => (
 
+    const [currentTd, setCurrentTd] = useState(null);
+
+    const dragStartHandler = (e, td) => {
+/*        console.log('drag', td);
+        console.log('dragStartHandler')*/
+        setCurrentTd(td);
+    };
+    const dragLeave = (e) => {
+        e.target.style.background = '#fafafa'
+/*
+        console.log('dragLeave')
+*/
+
+    };
+    const dragEnd = (e) => {
+        e.target.style.background = '#fafafa'
+
+/*
+        console.log('dragEnd')
+*/
+
+    };
+    const dragOver = (e) => {
+        e.preventDefault();
+        e.target.style.background = 'green'
+/*
+        console.log('dragOver')
+*/
+    };
+    const ddrop = (e, td) => {
+        e.preventDefault();
+        props.SetCurrentList(td.id, td.order, currentTd)
+        e.target.style.background = '#fafafa'
+/*
+        console.log('drop', td)
+*/
+
+
+    };
+    const sortCards = (a, b) => {
+        if (a.oredr > b.order) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    let ToDoElements = text/*.sort(sortCards)*/.map(td => (
         <div
+            onDragStart={(e) => dragStartHandler(e, td) }
+            onDragLeave={(e) => dragLeave(e)}
+            onDragEnd={(e) => dragEnd(e)}
+            onDragOver={(e) => dragOver(e)}
+            onDrop={(e) => ddrop(e, td)}
+            draggable={"true"}
             key={td.id}>
             <div
 

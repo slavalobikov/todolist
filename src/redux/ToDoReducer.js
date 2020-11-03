@@ -116,16 +116,13 @@ const ToDoReducer = (state = initialState, action) => {
                 ...state,
                 isUpdateSave: action.isUpdate
             };
-
-
-/*
         case SET_CURT_LIST:
             return {
                 ...state,
                 z: state.z.map(c => {
                     if (c.id === action.id) {
                         return {
-                            ...c, order: action.currentCart
+                            ...c, order: action.currentTd.order
                         }
                     }
                     if (c.id === action.currentCart) {
@@ -136,7 +133,6 @@ const ToDoReducer = (state = initialState, action) => {
                     return { ...c}
                 })
             }
-*/
         default:
             return state
     }
@@ -149,7 +145,7 @@ export const AddZ = (text, id , order = null) => ({type: ADD_Z, text, id, order}
 export const TooggleIsDoneTrue = (id, isDone) => ({type: TOOGGLE_TODO_IS_DONE, id,isDone});
 export const DeleteToDO = (id, ) => ({type: DELETE_TODO, id});
 export const EditToDO = (id, text, edit) => ({type: EDIT_TODO, id, text, edit});
-export const SetCurrentList = (id, currentCart) => ({type: SET_CURT_LIST, id,currentCart});
+export const SetCurrentList = (id, currentCart, currentTd) => ({type: SET_CURT_LIST, id,currentCart, currentTd});
 export const SetToDoItem = (item) => ({type: SET_TODO_ITEM, item});
 export const SetResponse = (response) => ({type: SET_RESPONSE, response});
 export const DeleteResponse = () => ({type: DELETE_RESPONSE, });
