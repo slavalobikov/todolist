@@ -10,8 +10,8 @@ const LODASH_FLATTEN = 'LODASH_FLATTEN';
 const SET_RESPONSE = 'SET_RESPONSE';
 const DELETE_RESPONSE = 'DELETE_RESPONSE';
 const IS_FETCHING = 'IS_FETCHING';
+const IS_UPDATE_SAVE = 'IS_UPDATE_SAVE';
 
-let order = 1;
 
 let initialState = {
         z : [
@@ -35,6 +35,7 @@ let initialState = {
         ],
         response: [],
         isFetching: null,
+        isUpdateSave: false,
 };
 
 const ToDoReducer = (state = initialState, action) => {
@@ -47,7 +48,7 @@ const ToDoReducer = (state = initialState, action) => {
                 text:action.text,
                 isDone: false,
                 isEdit:false,
-                order: order++,
+                order: action.order,
 
             };
 
@@ -90,7 +91,7 @@ const ToDoReducer = (state = initialState, action) => {
             };
         case LODASH_FLATTEN:
             let dima = _.flatten(state.z);
-            let leha = _.flatten(dima)
+            let leha = _.flatten(dima);
             return {
                 ...state,
                 z:leha
@@ -109,7 +110,12 @@ const ToDoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isFetching: action.isFetching
-            }
+            };
+        case IS_UPDATE_SAVE:
+            return  {
+                ...state,
+                isUpdateSave: action.isUpdate
+            };
 
 
 /*
@@ -139,7 +145,7 @@ const ToDoReducer = (state = initialState, action) => {
 };
 
 
-export const AddZ = (text, id) => ({type: ADD_Z, text, id});
+export const AddZ = (text, id , order = null) => ({type: ADD_Z, text, id, order});
 export const TooggleIsDoneTrue = (id, isDone) => ({type: TOOGGLE_TODO_IS_DONE, id,isDone});
 export const DeleteToDO = (id, ) => ({type: DELETE_TODO, id});
 export const EditToDO = (id, text, edit) => ({type: EDIT_TODO, id, text, edit});
@@ -148,6 +154,7 @@ export const SetToDoItem = (item) => ({type: SET_TODO_ITEM, item});
 export const SetResponse = (response) => ({type: SET_RESPONSE, response});
 export const DeleteResponse = () => ({type: DELETE_RESPONSE, });
 export const IsFething = (isFetching) => ({type: IS_FETCHING, isFetching });
+export const IsUpdateSave = (isUpdate) => ({type: IS_UPDATE_SAVE, isUpdate });
 export const LodashFlatten = () => ({type: LODASH_FLATTEN, });
 
 export const SetTODOThunk = () => {
@@ -188,9 +195,12 @@ export const DeleteAll = (text) => {
                         return response
                     });
                     if (response.status >= 200 && response.status < 300) {
+/*
                         console.log('Удаление прошло успешно' , [i]);
+*/
                         dispatch(SetTODOThunk());
                         dispatch(IsFething(false))
+                        dispatch(SetResponse([]))
                     }
                 }
         dispatch(SetTODOThunk());
@@ -201,6 +211,7 @@ export const DeleteAll = (text) => {
 };
 
 
+/*
 export const UpdateWithoutNew = (text) => {
     return async (dispatch) => {
         for (let i = 1; i <= text.length; i++) {
@@ -216,20 +227,21 @@ export const UpdateWithoutNew = (text) => {
         }
     }
 }
+*/
 export const PostToDOThunk = (text) => {
     return async  (dispatch) => {
         dispatch(IsFething(true));
         let responseOne = await axios.get('http://localhost:3000/z').then(response => {
             return response.data
         });
-        console.log('responseOne', responseOne);
         if (!!responseOne[0]) {
             for (let i = responseOne[0].id; i <= responseOne[0].id + responseOne[responseOne.length - 1].id; i++) {
                 if (!responseOne[i - 1]) {
                     return
                 } else {
-                    let responseTwo = await axios.delete(`http://localhost:3000/z/${responseOne[i -1].id}`,).then(response => {
+                     await axios.delete(`http://localhost:3000/z/${responseOne[i -1].id}`,).then(response => {
                         return console.log('Удаление с сервера успешно проведено', responseOne[i - 1].id)
+
                     });
                     dispatch(IsFething(false));
 
@@ -240,7 +252,7 @@ export const PostToDOThunk = (text) => {
 
             console.log('responseOne[i]', responseOne[i]);
             console.log('text[i]', text[i - 1]);
-            let responseThree = await axios.post(`http://localhost:3000/z`, text[i - 1]).then(response => {
+             await axios.post(`http://localhost:3000/z`, text[i - 1]).then(response => {
                 return response})
             ;}
         dispatch(IsFething(false));
@@ -267,10 +279,7 @@ export const PostToDOThunk = (text) => {
                 let responseThree = await axios.post(`http://localhost:3000/z`, text[i - 1]).then(response => {
                     return response})
                 ;}}
-
     }*/
-
-
 };
 
 export const FinalCopyThunk = (text) => {

@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
+import cn from 'classnames'
+
 import s from "./InputToDo.module.css";
+
 
 const InputToDo = (props) => {
 
@@ -19,14 +22,17 @@ const InputToDo = (props) => {
             return
         }
 
-        props.AddZ(value, IdNewMessage);
+        props.AddZ(value, IdNewMessage, IdNewMessage );
         setValue('')
     }
 
     return (
         <div>
             {!props.isFetching
-                ? <div  className={s.addField}>
+                ? <div  className={cn(s.addField, {
+                    [s.MainBlockHiden]: !!props.isUpdate
+
+                })}>
                     <input type="text"
                            value={value}
                            onChange={(e) => {setValue(e.currentTarget.value)}}

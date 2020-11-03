@@ -2,34 +2,34 @@ import React, {useState} from 'react';
 import cn from 'classnames'
 import {DeleteOutlined, FormOutlined, SaveOutlined} from '@ant-design/icons';
 
+
 import s from './ToDo.module.css'
 import preloaader from './../../assest/img/preloader.svg'
 
 
 const ToDo = ({text, isDone, ...props}) => {
     const [isEditValue, setIsEdit] = useState('');
+/*
     const [currentCard ,setCurrentCard] = useState(null);
-
-
-
+*/
     const editToDoMessage = (id, isEditValueF, isEditF, td) => {
                 if (!isEditValue && td === '' ) {
                     return
                 }
 
                props.EditToDO(id, isEditValueF, isEditF);
-               setIsEdit('');
+               setIsEdit(td);
 
 
 
            };
-    const sortCards = (a, b) => {
+/*    const sortCards = (a, b) => {
         if (a.order > b.order) {
             return 1;
         } else {
             return -1;
         }
-    };
+    };*/
 /*    const dragStartHandler = (e, todo) => {
         setCurrentCard(todo)
 
@@ -71,46 +71,52 @@ const ToDo = ({text, isDone, ...props}) => {
                 })}>
                     {td.isEdit
                     && <input type="text"
+                              onBlur={() => { editToDoMessage(td.id, isEditValue, td.isEdit, td.text)}}
                               onChange={(e) => {setIsEdit(e.currentTarget.value)}}
-                              value={isEditValue || td.text} />}
+                              value={td.text || isEditValue} autoFocus={true} />}
                     {!td.isEdit && td.text}
 
                 </span>
-                <span onClick={() => {props.DeleteToDO(td.id)}} className={s.delete}>{/*<CloseOutlined  />*/}<DeleteOutlined /></span>
+                <span onClick={() => { props.DeleteToDO(td.id)}} className={s.delete}>{/*<CloseOutlined  />*/}<DeleteOutlined /></span>
                 <span onClick={() => { editToDoMessage(td.id, isEditValue, td.isEdit, td.text)} } className={s.delete}>{/*<CloseOutlined  />*/}<FormOutlined /></span>
             </div>
         </div>
     ));
 
-    const [isSave, setIsSave] = useState(true);
 
     const Save = (text) => {
             props.PostToDOThunk(text);
-        setIsSave(!isSave);
+            props.SetResponse(text);
     };
 
-    const Izm = (text) => {
-        props.FinalCopyThunk(text)
-        setIsSave(!isSave);
+    const UpdateSave = () => {
+        props.PostToDOThunk(text);
+        props.IsUpdateSave(!props.isUpdate);
     };
-    console.log('response', props.response)
+
     return <div >
+        {!!props.isUpdate && !props.isFetching && <div className={s.mainPopup}>
+            <div className={s.popup}>
+                <div>
+                    <span className={s.info}>Идет синхранизация с сервером, подтвердите действие</span>
+                    <div>
+                        <SaveOutlined className={s.UpdateAll} onClick={() => UpdateSave(text)} />
+                    </div>
+                </div>
+            </div>
+        </div>}
         {!!props.isFetching
             ? <div className={s.PreloaderBlock}>
                 <img className={s.preloader} src={preloaader} alt="preloader"/>
               </div>
-            : <div className={s.MainBlock}>
+            : <div className={cn(s.MainBlock, {
+                [s.MainBlockHiden]: !!props.isUpdate,
+            })}>
             {ToDoElements}
-            {!!text[0] &&
-            <button onClick={() => Save(text)}>Загрузить данные</button>}
-            {!!text[0] &&
-            <div>
-                <button onClick={() => Izm(text)}>Изменить</button>
-            </div>}
-
-
             {!!text[0] && <DeleteOutlined className={s.DeleteAll} onClick={() => props.DeleteAll(text)} />}
-            <SaveOutlined className={s.SaveAll} />
+                {!!text[0] && !props.response[0] && <SaveOutlined className={s.SaveAll} onClick={() => Save(text)} />}
+
+                {!!text[0] && !!props.response[0] && <SaveOutlined className={s.SaveAll} onClick={() => UpdateSave(text)} />}
         </div>}
     </div>
 };

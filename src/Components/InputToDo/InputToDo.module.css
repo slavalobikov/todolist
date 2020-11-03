@@ -30,3 +30,7 @@
 .addField > input::placeholder {
     color:#bfbfbf;
 }
+
+.MainBlockHiden {
+    display: none;
+}

@@ -4,11 +4,11 @@ import {compose} from "redux";
 import {
     AddZ, DeleteAll,
     DeleteToDO,
-    EditToDO, FinalCopyThunk,
+    EditToDO, FinalCopyThunk, IsUpdateSave,
     PostToDOThunk,
-    SetCurrentList, SetResponseThunk,
+    SetCurrentList, SetResponse, SetResponseThunk,
     SetTODOThunk,
-    TooggleIsDoneTrue, UpdateWithoutNew
+    TooggleIsDoneTrue,
 } from "./redux/ToDoReducer";
 import ToDo from "./Components/ToDoElements/ToDo";
 
@@ -19,16 +19,6 @@ class ToDoContainer extends React.Component {
         this.props.SetTODOThunk();
         this.props.SetResponseThunk();
     }
-
-
-
-    /*
-        componentDidUpdate(prevProps, prevState, snapshot) {
-            if (this.props.isAuth != prevProps.isAuth ) {
-                alert('hello');
-            }
-        }
-    */
 
     render() {
         return (
@@ -44,6 +34,7 @@ let mapStateToProps = (state) => {
         text: state.ToDoReducer.z,
         response: state.ToDoReducer.response,
         isFetching: state.ToDoReducer.isFetching,
+        isUpdate: state.ToDoReducer.isUpdateSave,
     }
 };
 
@@ -57,8 +48,9 @@ export default compose(
         SetTODOThunk,
         PostToDOThunk,
         DeleteAll,
-        UpdateWithoutNew,
         FinalCopyThunk,
         SetResponseThunk,
+        SetResponse,
+        IsUpdateSave,
     }),
 )(ToDoContainer)

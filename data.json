@@ -1,14 +1,5 @@
 {
-  "z": [
-    {
-      "id": 1,
-      "isCheck": false,
-      "text": "cbvcbcvb",
-      "isDone": false,
-      "isEdit": false,
-      "order": 3
-    }
-  ],
+  "z": [],
   "comments": [
     {
       "id": 1,

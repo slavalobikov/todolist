@@ -1,5 +1,4 @@
 import React from 'react';
-import App from "../../App";
 import {compose} from "redux";
 import {connect} from "react-redux";
 import InputToDo from "../../Components/InputToDo/InputToDo";
@@ -27,6 +26,7 @@ let mapStateToProps = (state) => {
     return {
         text: state.ToDoReducer.z,
         isFetching: state.ToDoReducer.isFetching,
+        isUpdate: state.ToDoReducer.isUpdateSave,
     }
 };
 
